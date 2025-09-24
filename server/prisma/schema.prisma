@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  login String @unique
+  password String
+}
+
+model TheoreticalBase {
+  id Int @id @default(autoincrement())
+  fen String @unique
+  positionName String
+  positionDescription String
+  fromMove Moves[] @relation("FromTheory")
+  toMove Moves[] @relation("ToTheory")
+}
+
+model Moves {
+  id Int @id @default(autoincrement())
+  fromId Int
+  toId Int
+  move String
+  from TheoreticalBase @relation("FromTheory", fields: [fromId], references: [id])
+  to TheoreticalBase @relation("ToTheory", fields: [toId], references: [id])
+  piece String
+  type String
+}
