@@ -1,6 +1,17 @@
+<script setup>
+  
+</script>
+
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
+
+<style>
+  @import url(~/assets/style/chessboard2.min.css);
+  body {
+    margin: 0;
+    font-family: monospace;
+  }
+</style>

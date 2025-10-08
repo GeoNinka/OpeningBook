@@ -4,9 +4,9 @@ import { addMove, getMoves, deleteMove, updatePosition } from './theoreticalBase
 
 const router = express.Router()
 
-router.route('/theory').post(verifyJWT, addMove)
-router.route('/theory').get(getMoves) // api/theory?fen=1
-router.route('/theory/:id').delete(verifyJWT, deleteMove) // api/theory/1
-router.route('/theory/:id').put(verifyJWT, updatePosition)
+router.route('/theory').post(verifyJWT, addMove)           // create
+router.route('/theory').get(getMoves)                      //read
+router.route('/theory/:id').put(verifyJWT, updatePosition) //update
+router.route('/theory/:id').delete(verifyJWT, deleteMove)  //delete
 
 export default router

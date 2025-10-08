@@ -16,11 +16,20 @@ model User {
 model TheoreticalBase {
   id Int @id @default(autoincrement())
   fen String @unique
-  positionName String
-  positionDescription String
+  translation TheoreticalBaseTranslate[] @relation("Translate")
   fromMove Moves[] @relation("FromTheory")
   toMove Moves[] @relation("ToTheory")
 }
+
+model TheoreticalBaseTranslate {
+  id Int @id @default(autoincrement())
+  langCode String
+  description String
+  name String
+  positionId Int
+  position TheoreticalBase @relation("Translate", fields: [positionId], references: [id])
+}
+
 
 model Moves {
   id Int @id @default(autoincrement())
