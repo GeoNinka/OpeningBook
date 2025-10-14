@@ -15,7 +15,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        width: 90%;
+        width: 95%;
         margin: 0 auto;
         box-sizing: border-box;
         height: 8vh;
