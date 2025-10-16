@@ -14,12 +14,13 @@
     })
 
     function setupEngine() {
-        engine = new Worker('stockfish/stockfish-17.1-single-a496a04.js')
+        engine = new Worker('stockfish/stockfish-17.1-single-a496a04.js') // Используем однопоточную версию движка
         engine.addEventListener('message', loadingEngineHandler)
         engine.postMessage('uci')
     }
 
     function loadingEngineHandler(msg) {
+        // Флаг успешной инициализации движка
         if (msg.data === 'uciok') {
             isEngineLoaded = true
             console.log('Engine is loaded')
@@ -29,19 +30,22 @@
     }
 
     function messageHandling(msg) {
+        // Обрабатываем сообщение если оно содержит в себе информацию об оценке позиции
         if (String(msg.data).startsWith('info depth')) {
-            const matches = String(msg.data).match(/score (\w*\s.\d*)/i)
+            const matches = String(msg.data).match(/score (\w*\s.\d*)/i) // Оставляем в строке только оценку позиции
             if (matches) {
                 let score = matches[0]
                 score = score.split(' ')
-                let status = score[1]
-                score = parseInt(score[score.length - 1])
-                let turn = fenStore.fen.split(' ')[1] == 'b' ? -1 : 1
+                let status = score[1] // Может принимать значение mate или cp в зависимости от статуса игры
+                score = parseInt(score[score.length - 1]) // Оценка измеряется в сантипешках либо в ходах оставшихся до мата
+                let turn = fenStore.fen.split(' ')[1] == 'b' ? -1 : 1 // Получаем 
                 
                 if (status == 'cp') {
                     score = score * turn / 100
-                    let percent = 0
-                    percent = score / 10 * 50
+                    let percent = (score / 10) * 50
+                    if (percent >= 50) { percent = 45 }
+                    if (percent <= -50) { percent = -45 } 
+                    
                     thermometer.style = `height: ${50 - percent}%`
                     evaluationValue.value = Math.abs(score)
                 } else if (status == 'mate') {

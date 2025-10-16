@@ -1,11 +1,5 @@
 <template>
-    <div class="movesList">
-
+    <div>
+        
     </div>
 </template>
-
-<style scoped>
-    .movesList {
-        height: 100%;
-    }
-</style>
