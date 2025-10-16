@@ -38,18 +38,21 @@
                 score = score.split(' ')
                 let status = score[1] // Может принимать значение mate или cp в зависимости от статуса игры
                 score = parseInt(score[score.length - 1]) // Оценка измеряется в сантипешках либо в ходах оставшихся до мата
-                let turn = fenStore.fen.split(' ')[1] == 'b' ? -1 : 1 // Получаем 
+                let turn = fenStore.fen.split(' ')[1] == 'b' ? -1 : 1 // Получаем порядок хода из FEN строки
                 
                 if (status == 'cp') {
+                    // Получаем оценку в сантипешках и определяем на какое значение сдвинуть градусник
+                    // Если преимущество одной из сторон слишком большое то фиксируем градусник на 95%/5% высоты
                     score = score * turn / 100
+                    evaluationValue.value = Math.abs(score)
+
                     let percent = (score / 10) * 50
                     if (percent >= 50) { percent = 45 }
                     if (percent <= -50) { percent = -45 } 
-                    
                     thermometer.style = `height: ${50 - percent}%`
-                    evaluationValue.value = Math.abs(score)
                 } else if (status == 'mate') {
                     evaluationValue.value = `# ${Math.abs(score)}`
+                    // Проверяем порядок хода и сдвигаем градусник на 100%/0%
                     if (turn == -1 && score < 0 || turn == 1 && score > 0) {
                         thermometer.style = `height: 0%`
                     } else if (turn == -1 && score > 0 || turn == 1 && score < 0) {
@@ -59,16 +62,20 @@
             }
         }
 
+        // Т.к. используется однопоточная версия движка необходимо отслеживать окончание работы
+        // предыдущего вызова перед тем как проводить следующую оценку позиции
         if (msg.data.split(' ')[0] === 'bestmove') {
             isEvaluating = false
             if (isEvaluationStoped) {
-                isEvaluationStoped = false
+                // Если процесс оценки был прерван то запускаем новую оценку
+                isEvaluationStoped = false 
                 startEvaluation(fenStore.fen)
             }
         }
     }
 
     function startEvaluation(fen) {
+        // Если предыдущая оценка не завершилась то прерываем её
         if (isEvaluating) {
             isEvaluationStoped = true
             engine.postMessage('stop')
@@ -85,10 +92,12 @@
         }
     }
 
+    // Запускаем оценку позиции при каждом изменении состояния доски
     watch(() => fenStore.fen, async () => {
         try {
             startEvaluation(fenStore.fen)
         } catch (e) {
+            // При ошибке воркера перезапускаем движок
             console.log(e)
             if (engine) {
                 engine.terminate()
