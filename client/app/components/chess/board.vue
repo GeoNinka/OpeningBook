@@ -1,15 +1,16 @@
 <script setup>
-    import { Chessboard2 } from '@chrisoakman/chessboard2/dist/chessboard2.min.js'
+    // import { Chessboard2 } from '@chrisoakman/chessboard2/dist/chessboard2.min.js'
+    const { $chessboard2 } = useNuxtApp()
     import { Chess } from 'chess.js'
 
     const fenStore = useFenStore()
     const pgnStore = usePgnStore()
     let board = null
 
-    // Board and chess game initilisation
+    // Инициализация доски и игры
     const game = new Chess()
     onMounted(async () => {
-        board = Chessboard2('board', {
+        board = $chessboard2('board', {
             position: 'start',
             draggable: true,
             onDragStart,
@@ -17,7 +18,7 @@
         })
     })  
 
-    // Проверка цвета фигуры на которую нажал пользователь
+    // Проверка цвета фигуры при нажатии
     function isWhitePiece (piece) { return /^w/.test(piece) }
     function isBlackPiece (piece) { return /^b/.test(piece) }
 
@@ -59,6 +60,12 @@
 
     // Отслеживаем изменение состояния списка ходов и обновляем состояние доски с игрой
     watch(() => pgnStore.flag, () => {
+        if (pgnStore.pgnList.length == 0) {
+            board.start()
+            game.reset()
+            fenStore.fen = game.fen()
+            return
+        }
         let arr = pgnStore.pgnList[pgnStore.pgnIndex].slice()
         let pgn = arr.slice(0, Math.min(pgnStore.moveIndex, arr.length)).join(' ')
         game.loadPgn(pgn)

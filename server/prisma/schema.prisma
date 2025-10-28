@@ -30,7 +30,6 @@ model TheoreticalBaseTranslate {
   position TheoreticalBase @relation("Translate", fields: [positionId], references: [id])
 }
 
-
 model Moves {
   id Int @id @default(autoincrement())
   fromId Int
