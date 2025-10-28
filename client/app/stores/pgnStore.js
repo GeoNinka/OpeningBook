@@ -11,7 +11,6 @@ export const usePgnStore = defineStore('pgnStore', {
             this.flag = !this.flag
         },
 
-        // 
         updatePgnList(pgn) {
             let array = this.pgnToArray(pgn)
 
@@ -22,6 +21,16 @@ export const usePgnStore = defineStore('pgnStore', {
                 this.moveIndex = array.length
             } else {
                 return this.compareArrays(array) 
+            }
+        },
+
+        deletePgn(index) {
+            this.pgnList.splice(index, 1)
+            if (index == this.pgnIndex) { // Если удаляем текущую линию то сбрасываем состояние игры
+                this.moveIndex = 0
+                this.pgnIndex = 0
+            } else if (index < this.pgnIndex) { // Если удаляется линия с меньшим индексом то уменьшаем текущий индекс из за сдвига массива
+                this.pgnIndex -= 1
             }
         },
 
