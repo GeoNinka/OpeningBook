@@ -88,8 +88,7 @@
 
     .pgn__divider {
         width: 100%;
-        opacity: 0.2;
-        border-bottom: 1px solid #7d7d7d;
+        border-bottom: 1px solid #2b2b2b;
         margin: 0 auto;
         margin-top: 10px;
     }
@@ -108,9 +107,8 @@
     .pgn__move {
         color: #c9c9c9;
         cursor: pointer;
-        border: 1px solid #7d7d7d;
+        border-bottom: 1px solid #2b2b2b;
         padding: 5px;
-        border-radius: 3px;
         height: 17px;
     }
 
@@ -130,13 +128,13 @@
         width: 40px;
         height: 40px;
         background: none;
-        border: 1px solid #7d7d7d;
+        border: 1px solid #2b2b2b;
         border-radius: 3px;
         cursor: pointer;
     }
 
     .pgn__delete:hover {
-        border-color: white;
+        border-color: #7d7d7d;
     }
 
     .pgn__delete:active {
